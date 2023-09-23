@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 export function Room() {
     const { roomId } = useParams()
     useEffect(() => {
+        console.log({ roomId })
         socket.on('connect', function() {
             socket.emit('join', { room: roomId, username: 'Test' });
         });
@@ -17,7 +18,7 @@ export function Room() {
     }, [roomId])
     return  (
         <div>
-            
+            <h1>Room {roomId}</h1>
         </div>
     )
 }

@@ -5,14 +5,14 @@ from wan.main.util import User, Room
 
 app, socketio = create_app()
 
-room_users = {}
 rooms = []
-
 
 ######## RECEIVEING MESSAGES ########
 @socketio.on('message')
 def handle_message(data):
-    print('received message: ' + data)
+    print('received message: ' + data["message"])
+    emit('new_message', {"message": f"{data['username']}: {data['message']}"}, broadcast=True, to=data["room_id"])
+
 
 
 @socketio.on('json')
@@ -66,25 +66,35 @@ def on_join(data):
     if len(room.users) == 0:
         room.host_id = user.sid
         # room is empty. The user is the host
+    else:
+        room.users.append(user)
 
-    #rooms.append(room)
-
-    #if isinstance(room_users, list):
-    #    room.append(user)
-    #else:
-    #    room = list(user)
-    #rooms[room_id] = room
-    #print(rooms)
-    join_room(roomid)
-    send(username + ' has entered the room', to=roomid)
+    rooms.append(room)
+    join_room(room_id)
+    send(username + ' has entered the room', to=room_id)
 
 
 @socketio.on('leave')
 def on_leave(data):
-    username = data['username']
+    user = None
+    current_room = None
+    user_id = request.sid
+    room_id = data["room"]
+
+    for room in rooms:
+        if room.room_id == room_id:
+            current_room: Room = room
+            break
+
+    for user in current_room.users:
+        if user.sid == user_id:
+            current_room.users.remove(user)
+            break
+
     room = data['room']
     leave_room(room)
-    send(username + ' has left the room.', to=room)
+
+    send(user_id + ' has left the room.', to=room)
 
 
 @socketio.on('connect')
