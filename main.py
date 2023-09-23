@@ -1,10 +1,12 @@
 import socketio
-
 from wan import create_app
 from flask_socketio import join_room, leave_room, send, emit
 from flask import request
+from wan.main.util import User
 
 app, socketio = create_app()
+
+rooms = {}
 
 ######## RECEIVEING MESSAGES ########
 @socketio.on('message')
@@ -40,12 +42,21 @@ def handle_message(data):
     print(data)
     emit('spam', { 'hello from ' + request.sid })
 
+
 @socketio.on('join')
 def on_join(data):
     username = data['username']
-    room = data['room']
-    join_room(room)
-    send(username + ' has entered the room', to=room)
+    roomid = data['room']
+    room = rooms[roomid]
+    user = User(username, request.sid)
+    if isinstance(room, list):
+        room.append(user)
+    else:
+        room = list(user)
+    rooms[roomid] = room
+    print(rooms)
+    join_room(roomid)
+    send(username + ' has entered the room', to=roomid)
 
 @socketio.on('leave')
 def on_leave(data):
