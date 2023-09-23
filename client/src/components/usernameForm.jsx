@@ -30,7 +30,7 @@ export function UsernameForm() {
                     type="text"
                     name="username"
                     defaultValue={username}
-                    placeholder={"Room Name"}
+                    placeholder={"Username"}
                     className="bg-gray-700 w-full rounded-md px-4 py-2.5"
                 />
                 <Button className="flex-shrink-0">Set Username</Button>
