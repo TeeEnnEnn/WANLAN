@@ -17,10 +17,25 @@ rooms = [
 def make_json_room(room):
     _room = {
         "id": room.room_id,
-        "name": room.room_name
+        "name": room.room_name,
+        "users": list(map(make_user_json, room.users)),
+        "current_time": room.current_time,
+        "host_id": room.host_id,
+        "play_state": room.play_state,
+        "vid_url": room.vid_url
+
+
+
     }
     return _room
 
+def make_user_json(user):
+    _user = {
+        "id": user.sid,
+        "name": user.name,
+
+    }
+    return _user
 def find_room_by_id(room_id):
     existing_room = None
     for room in rooms:
