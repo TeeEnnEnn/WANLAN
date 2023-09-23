@@ -1,5 +1,6 @@
 import {useEffect, useState} from "react";
 import {socket} from "../socket.js";
+import {Button} from "./button.jsx";
 
 export function UsernameForm() {
     const [username,] = useState(window.localStorage.getItem("username") ?? "")
@@ -17,6 +18,7 @@ export function UsernameForm() {
                        defaultValue={username}
                        name={"username"}
                        className={"bg-amber-50 text-black"}/>
+                <Button>Add URL</Button>
             </form>
         </div>
     )
