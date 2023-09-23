@@ -1,6 +1,5 @@
-import {useEffect, useState} from "react";
-import {socket} from "../socket.js";
-import {Button} from "./button.jsx";
+import { useState } from "react";
+import { Button } from "./button.jsx";
 
 export function UsernameForm() {
     const [username,] = useState(window.localStorage.getItem("username") ?? "")

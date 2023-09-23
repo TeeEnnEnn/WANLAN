@@ -63,7 +63,7 @@ export function Room() {
     return  (
         <div className={"grid grid-cols-1 md:grid-cols-12 md:gap-4 w-full"}>
             <div className={"flex flex-col gap-3.5 md:col-span-9"}>
-                <h1 className="text-white text-4xl font-black">Partying in: {room.name}</h1>
+                <h1 className="text-white text-4xl font-black"><marquee>Partying in: {room.name}</marquee></h1>
                 <VideoForm roomId={roomId} hasHost={hasHost} />
                 <RoomVideo initialVideoURL={room.vid_url} roomId={roomId} hasHost={hasHost} />
             </div>
