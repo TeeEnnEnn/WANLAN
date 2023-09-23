@@ -7,6 +7,7 @@ from wan.main.util import User
 
 app, socketio = create_app()
 
+room_users = {}
 rooms = {}
 
 ######## RECEIVEING MESSAGES ########
@@ -48,9 +49,9 @@ def handle_message(data):
 def on_join(data):
     username = data['username']
     roomid = data['room']
-    room = rooms[roomid]
+    room = room_users[roomid]
     user = User(username, request.sid)
-    if isinstance(room, list):
+    if isinstance(room_users, list):
         room.append(user)
     else:
         room = list(user)
