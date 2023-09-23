@@ -4,6 +4,10 @@ from flask_socketio import join_room, leave_room, send
 
 app, socketio = create_app()
 
+@socketio.on('asdf')
+def handle_message(data):
+    print(data)
+
 @socketio.on('join')
 def on_join(data):
     username = data['username']
