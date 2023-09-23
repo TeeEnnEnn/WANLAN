@@ -11,7 +11,7 @@ app, socketio = create_app()
 def gen_uuid_str():
     return str(uuid.uuid4())
 
-default_room = Room(room_id="b19988ea-dd30-46f1-8934-12d5ef4b6b55", room_name="Co.Hack PARTY 🎉🎉🎉")
+default_room = Room(room_id="co-hack", room_name="Co.Hack PARTY 🎉🎉🎉")
 default_room.vid_url = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ&pp=ygUkcmljayBhc3RsZXkgbmV2ZXIgZ29ubmEgZ2l2ZSB5b3UgdXAg'
 
 rooms = [
