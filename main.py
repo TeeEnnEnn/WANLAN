@@ -4,6 +4,7 @@ from flask_socketio import join_room, leave_room, send, emit
 from flask import request
 from wan.main.util import User
 
+
 app, socketio = create_app()
 
 rooms = {}
@@ -40,7 +41,7 @@ def handle_my_custom_event(json):
 @socketio.on('asdf')
 def handle_message(data):
     print(data)
-    emit('spam', { 'hello from ' + request.sid })
+    emit('spam', { "message": 'hello from ' + request.sid }, broadcast=True)
 
 
 @socketio.on('join')

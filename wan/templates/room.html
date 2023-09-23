@@ -1,5 +1,29 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<p>This is a room</p>
+<button type="button" id="btn-clickme" class="bg-white text-slate-500 p-3">Click Me</button>
+<script src="https://unpkg.com/htmx.org@1.9.6"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
+<script type="text/javascript" charset="utf-8">
+    const socket = io();
+    const roomId = location.pathname.split('/')?.[1]
+    let username = undefined
+    if (typeof roomId !== 'string') {
+        console.error('error no room id')
+    }
+    socket.on('connect', function() {
+        socket.emit('join', { room: roomId, username: 'Test' });
+    });
+    socket.on('disconnect', function() {
+        socket.emit('leave')
+    })
+    const clickBtn = document.getElementById('btn-clickme')
+    clickBtn.onclick = (() => {
+        socket.emit("asdf", { hello: "world", test: 1, isButton: true })
+    })
+    socket.on('spam', (data) => {
+        console.log({ data })
+        alert(data.message)
+    })
+</script>
 {% endblock content %}
