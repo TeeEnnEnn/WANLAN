@@ -1,6 +1,6 @@
 from wanLan import create_app
 
-app = create_app()
+app, socket = create_app()
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    socket.run(app, debug=True, allow_unsafe_werkzeug=True)
