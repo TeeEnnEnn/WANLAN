@@ -21,7 +21,7 @@ def make_json_room(room):
     }
     return _room
 
-def find_room_by_id(roomId):
+def find_room_by_id(room_id):
     existing_room = None
     for room in rooms:
         if room.room_id == room_id:
@@ -40,8 +40,7 @@ def get_room(roomId):
     _room = find_room_by_id(roomId)
     if _room is None:
         return jsonify(None)
-    _json_room = make_json_room(_room)
-    return jsonify(_rooms)
+    return jsonify(make_json_room(_room))
 
 
 ######## RECEIVEING MESSAGES ########
