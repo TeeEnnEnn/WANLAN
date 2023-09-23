@@ -1,9 +1,38 @@
 from wan import create_app
-from flask_socketio import join_room, leave_room, send
+from flask_socketio import join_room, leave_room, send, emit
 
 
 app, socketio = create_app()
 
+######## RECEIVEING MESSAGES ########
+@socketio.on('message')
+def handle_message(data):
+    print('received message: ' + data)
+
+@socketio.on('json')
+def handle_json(json):
+    print('recieved json ' + str(json))
+
+@socketio.on('my event')
+def handle_my_custom_event(json):
+    print('received json: ' + str(json))
+
+@socketio.event
+def my_custom_event(arg1, arg2, arg3):
+    print('received args: ' + arg1 + arg2 + arg3)
+
+def my_function_handler(data):
+    pass
+
+socketio.on_event('my event', my_function_handler, namespace='/test')
+@socketio.on('my event', namespace='/test')
+def handle_my_custom_namespace_event(json):
+    print('received json: ' + str(json))
+
+@socketio.on('my event')
+def handle_my_custom_event(json):
+    print('received json: ' + str(json))
+    return 'one', 2
 @socketio.on('join')
 def on_join(data):
     username = data['username']
@@ -17,6 +46,14 @@ def on_leave(data):
     room = data['room']
     leave_room(room)
     send(username + ' has left the room.', to=room)
+
+@socketio.on('connect')
+def test_connect(auth):
+    emit('my response', {'data': 'Connected'})
+
+@socketio.on('disconnect')
+def test_disconnect():
+    print('Client disconnected')
 
 if __name__ == "__main__":
     socketio.run(app, debug=True, allow_unsafe_werkzeug=True)
