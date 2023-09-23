@@ -21,6 +21,9 @@
         clickBtn.onclick = (() => {
             socket.emit("asdf", { hello: "world", test: 1, isButton: true })
         })
+        socket.on('spam', (data) => {
+            alert(data.message)
+        })
     </script>
 </body>
 </html>
