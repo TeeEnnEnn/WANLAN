@@ -69,16 +69,14 @@ def on_join(data):
 
     #rooms.append(room)
 
-    #room = room_users[room_id]
-
     #if isinstance(room_users, list):
     #    room.append(user)
     #else:
     #    room = list(user)
     #rooms[room_id] = room
     #print(rooms)
-    #join_room(roomid)
-    #send(username + ' has entered the room', to=roomid)
+    join_room(roomid)
+    send(username + ' has entered the room', to=roomid)
 
 
 @socketio.on('leave')
