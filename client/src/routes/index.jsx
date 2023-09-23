@@ -2,6 +2,7 @@ import {UsernameForm} from "../components/usernameForm.jsx";
 import {HostForm} from "../components/HostForm.jsx";
 import { useEffect, useState } from "react";
 import { socket } from "../socket.js";
+import {Link} from "react-router-dom";
 
 export function Index() {
     const [rooms, setRooms] = useState([])
@@ -29,7 +30,7 @@ export function Index() {
                 {rooms.length === 0 && 'No Rooms Exist'}
                 {rooms.length > 0 && rooms.map(room => (
                     <div key={room.id}>
-                        {room.name}
+                        <Link to={`/room/${room.id}`}>{room.name}</Link>
                     </div>
                 ))}
             </div>
