@@ -18,7 +18,7 @@ export function UsernameForm() {
                        defaultValue={username}
                        name={"username"}
                        className={"bg-amber-50 text-black"}/>
-                <Button>Add URL</Button>
+                <Button>Set Username</Button>
             </form>
         </div>
     )

@@ -7,14 +7,16 @@ export function HostForm() {
         evt.preventDefault();
         const formData = new FormData(evt.target)
         const data = Object.fromEntries(formData);
-        console.log({data})
+        const username = window.localStorage.getItem('username') ?? 'Anonymous'
+        socket.emit('create_room', { username, room_name: data.room_name })
+        evt.target.reset()
     }
 
     return (
         <div>
             <form onSubmit={handleSubmit}>
                 <input type="text"
-                       name="Room Name"
+                       name="room_name"
                        placeholder={"Room Name"}
                        className="bg-blue-500 "/>
                 <Button>Host A Room</Button>

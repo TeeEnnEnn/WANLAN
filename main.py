@@ -2,18 +2,34 @@ from wan import create_app
 from flask_socketio import join_room, leave_room, send, emit
 from flask import request
 from wan.main.util import User, Room, Message
+from flask.json import jsonify
+import uuid
 
 app, socketio = create_app()
 
-global global_roomid
-rooms = []
+def gen_uuid_str():
+    return str(uuid.uuid4())
+
+rooms = [
+    Room(room_id=gen_uuid_str(), room_name="Test")
+]
+
+def make_json_room(room):
+    _room = {
+        "id": room.room_id,
+        "name": room.room_name
+    }
+    return _room
+
+@app.route("/api/rooms", methods=["GET"])
+def get_rooms():
+    _rooms = list(map(make_json_room, rooms))
+    return jsonify(_rooms)
 
 
 ######## RECEIVEING MESSAGES ########
 @socketio.on('message')
 def handle_message(data):
-
-    print('received message: ' + data["message"])
     emit('new_message', {"message": f"{data['username']}: {data['message']}"}, broadcast=True, to=data["room_id"])
     message = Message(data['message_id'], data['room_id'], data['user_id'], data['timestamp'], data['message'], data['username'])
     if len(rooms) != 0:
@@ -21,63 +37,15 @@ def handle_message(data):
             if room.room_id == message.roomid:
                 room.chat_message.append(message)
                 break
-    print(rooms)
-@socketio.on('json')
-def handle_json(json):
-    print('recieved json ' + str(json))
 
-
-@socketio.on('my event')
-def handle_my_custom_event(json):
-    print('received json: ' + str(json))
-
-
-@socketio.event
-def my_custom_event(arg1, arg2, arg3):
-    print('received args: ' + arg1 + arg2 + arg3)
-
-
-def my_function_handler(data):
-    pass
-
-
-socketio.on_event('my event', my_function_handler, namespace='/test')
-
-
-@socketio.on('my event', namespace='/test')
-def handle_my_custom_namespace_event(json):
-    print('received json: ' + str(json))
-
-
-@socketio.on('my event')
-def handle_my_custom_event(json):
-    print('received json: ' + str(json))
-    return 'one', 2
-
-
-@socketio.on('asdf')
-def handle_message(data):
-    print(data)
-    emit('spam', {"message": 'hello from ' + request.sid}, broadcast=True)
-
-@socketio('room list')
-def room_list(data):
-    for room in rooms:
-        # room[]
-
-
-
-@socketio.on('create')
+@socketio.on('create_room')
 def create(data):
     username = data['username']
     room_name = data["room_name"]
 
-
     user = User(username, request.sid)
 
-    room = Room(room_id=global_roomid, room_name=room_name)
-    global_roomid += 1
-
+    room = Room(room_id=gen_uuid_str(), room_name=room_name)
 
     room.host_id = user.sid
 
@@ -85,32 +53,29 @@ def create(data):
 
     rooms.append(room)
     join_room(room_name)
-
-
-
+    json_room = make_json_room(room)
+    emit('room_created', json_room, broadcast=True)
 
 @socketio.on('join')
 def on_join(data):
     username = data['username']
     room_id = data['room']
-    roomName = data['room_name']
 
     user = User(username, request.sid)
 
-    room = Room(room_id=room_id, roomName=roomName)
+    existing_room = None
+    for room in rooms:
+        if room.room_id == room_id:
+            existing_room = room
+            break
+    
+    if existing_room is None:
+        return
 
-    if len(room.users) == 0:
-        room.host_id = user.sid
-        # room is empty. The user is the host
-    else:
-        room.users.append(user)
+    existing_room.users.append(user)
 
-    rooms.append(room)
-
-    print(rooms)
     join_room(room_id)
     send(username + ' has entered the room', to=room_id)
-
 
 @socketio.on('leave')
 def on_leave(data):
@@ -134,18 +99,11 @@ def on_leave(data):
 
     send(user_id + ' has left the room.', to=room)
 
-
-@socketio.on('connect')
-def test_connect(auth):
-    emit('my response', {'data': 'Connected'})
-
-
 @socketio.on('disconnect')
 def test_disconnect():
     print('Client disconnected')
 
 
 if __name__ == "__main__":
-    global_roomid = 0
     socketio.run(app, debug=True, port=3001, allow_unsafe_werkzeug=True)
 
