@@ -538,6 +538,10 @@ video {
   position: static;
 }
 
+.block {
+  display: block;
+}
+
 .aspect-square {
   aspect-ratio: 1 / 1;
 }
