@@ -13,7 +13,9 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.16.0",
-    "socket.io-client": "^4.7.2"
+    "socket.io-client": "^4.7.2",
+    "video.js": "^8.5.2",
+    "videojs-youtube": "^3.0.1"
   },
   "devDependencies": {
     "@types/react": "^18.2.15",

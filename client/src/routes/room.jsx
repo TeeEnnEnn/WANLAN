@@ -2,7 +2,8 @@ import { useEffect } from "react"
 import { useParams } from "react-router-dom";
 import { socket } from "../socket";
 import { Chat } from "../components/Chat";
-import {VideoForm} from "../components/VideoForm.jsx";
+import { VideoForm } from "../components/VideoForm";
+import { RoomVideo } from '../components/RoomVideo'
 
 export function Room() {
     const { roomId } = useParams()
@@ -19,14 +20,15 @@ export function Room() {
         }
     }, [roomId])
     return  (
-
-        <div className={"flex flex-row gap-4 flex-wrap"}>
-            <div className={"flex flex-col gap-2"}>
+        <div className={"grid grid-cols-1 md:grid-cols-12 md:gap-4 w-full"}>
+            <div className={"flex flex-col gap-2 md:col-span-9"}>
                 <h1>Room {roomId}</h1>
                 <VideoForm />
-                <div className={"aspect-video bg-white"}></div>
+                <RoomVideo />
             </div>
-            <Chat />
+            <aside className="md:col-span-3 bg-slate-700">
+                <Chat />
+            </aside>
         </div>
     )
 }
