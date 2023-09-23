@@ -19,9 +19,13 @@ export function Index() {
         }
     }, [])
     useEffect(() => {
-        socket.on('room_created', (room) => {
+        const handleRoomCreated = (room) => {
             setRooms(prevRooms => prevRooms.concat([room]))
-        })
+        }
+        socket.on('room_created', handleRoomCreated)
+        return () => {
+            socket.off('room_created', handleRoomCreated)
+        }
     }, [])
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

@@ -13,7 +13,7 @@ def gen_uuid_str():
 
 
 rooms = [
-    Room(room_id=gen_uuid_str(), room_name="Test")
+    Room(room_id="b19988ea-dd30-46f1-8934-12d5ef4b6b55", room_name="Test")
 ]
 messages = []
 
@@ -70,7 +70,7 @@ def get_room(roomId):
 
 @socketio.on('message')
 def handle_message(data):
-    emit('new_message', {"message": f"{data['username']}: {data['message']}"}, to=data["room_id"])
+    emit('new_message', {"message": f"{data['username']}: {data['message']}" }, to=data["room_id"], include_self=False)
     message = Message(data['room_id'], request.sid, data['message'], data['username'])
     if len(rooms) != 0:
         for room in rooms:
@@ -122,30 +122,35 @@ def on_join(data):
     room.users.append(user)
 
     join_room(room_id)
-    send(username + ' has entered the room', to=room_id)
+    emit('new_message', {"message": f"🎉 {username} has entered the party." }, to=room_id)
 
 
 @socketio.on('leave')
 def on_leave(data):
-    user = None
+    current_user = None
     current_room = None
     user_id = request.sid
-    room_id = data["room"]
+    room_id = data["room_id"]
 
     for room in rooms:
         if room.room_id == room_id:
             current_room: Room = room
             break
 
+    if current_user is None:
+        return
+
     for user in current_room.users:
         if user.sid == user_id:
+            current_user = user 
             current_room.users.remove(user)
             break
 
-    room = data['room']
-    leave_room(room)
+    if current_room is None:
+        return
 
-    send(user_id + ' has left the room.', to=room)
+    leave_room(room_id)
+    emit('new_message', {"message": f"😭 {current_user.name} has left the party." }, to=room_id)
 
 
 @socketio.on('disconnect')
@@ -159,7 +164,7 @@ def set_url(data):
     if room is None:
         return
     room.vid_url = data['url']
-    emit('url_update', {'url': data['url']}, to=data['room_id'], broadcast=True)
+    emit('url_update', {'url': data['url']}, to=data['room_id'])
 
 
 if __name__ == "__main__":

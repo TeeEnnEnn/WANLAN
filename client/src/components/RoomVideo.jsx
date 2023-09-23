@@ -5,10 +5,13 @@ import { socket } from '../socket'
 export function RoomVideo({ initialVideoURL }) {
     const [videoURL, setVideoURL] = useState(initialVideoURL)
     useEffect(() => {
-        socket.on('url_update', (data) => {
-            console.log(data);
+        const handleURLUpdate = data => {
             setVideoURL(data.url)
-        })
+        }
+        socket.on('url_update', handleURLUpdate)
+        return () => {
+            socket.off('url_update', handleURLUpdate)
+        }
     }, [])
     if (!videoURL) {
         return (

@@ -23,14 +23,19 @@ export function Room() {
     }, [roomId])
     useEffect(() => {
         console.log({ roomId })
-        socket.on('connect', function() {
-            socket.emit('join', { room: roomId, username: 'Test' });
-        });
-        socket.on('disconnect', function() {
-            socket.emit('leave')
-        })
+        const handleConnect = () => {
+            const username = window.localStorage.getItem('username') ?? 'Anonymous'
+            socket.emit('join', { room: roomId, username });
+        }
+        const handleDisconnect = () => {
+            socket.emit('leave', { room_id: roomId })
+        }
+        socket.on('connect', handleConnect);
+        socket.on('disconnect', handleDisconnect);
         return () => {
-            socket.emit('leave')
+            socket.emit('leave', { room_id: roomId })
+            socket.off('connect', handleConnect)
+            socket.off('disconnect', handleDisconnect)
         }
     }, [roomId])
 

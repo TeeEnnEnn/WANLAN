@@ -1,25 +1,29 @@
 import {useEffect, useState} from "react"
 import { socket } from "../socket"
 import {Button} from "./button.jsx";
-import {data} from "autoprefixer";
 
 export function Chat({roomId}) {
 
     const [messages, setMessages] = useState([])
     useEffect(() => {
-        socket.on('new_message', (data) => {
+        const handleNewMessage = (data) => {
             console.log({ new_message: data })
-            setMessages(prevState => [...prevState, data])
-        })
+            setMessages(prevState => [...prevState, data.message])
+        }
+        socket.on('new_message', handleNewMessage)
+        return () => {
+            socket.off('new_message', handleNewMessage)
+        }
     }, [])
     const handleSubmit = evt => {
         evt.preventDefault()
         const formData = new FormData(evt.target)
         const data = Object.fromEntries(formData)
-        const username = window.localStorage.getItem("username")??"anonymous"
-        socket.emit("message", {roomid:roomId, message: data["message"], username});
+        const username = window.localStorage.getItem("username") ?? "Anonymous"
+        socket.emit("message", {room_id:roomId, message: data["message"], username});
         setMessages(prevState => [...prevState, `${username}: ${data["message"]}`])
         console.log({ data })
+        evt.target.reset()
     }
     return (
         <div>
