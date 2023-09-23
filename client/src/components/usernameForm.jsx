@@ -13,8 +13,7 @@ export function UsernameForm() {
 
     return (
         <form onSubmit={handleSubmit}
-            className="flex flex-row items-center gap-4"
-        >
+              className="flex flex-row items-center gap-4">
             <input
                 type="text"
                 name="username"

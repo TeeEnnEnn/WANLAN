@@ -8,7 +8,11 @@ const partyVariants = [
     'LAN',
     'HACK',
     'WACK',
-    'PARTY'
+    'PARTY',
+    "JR",
+    "AUSTIN",
+    "CYRIL",
+    "THEO"
 ]
 
 export function Logo() {
