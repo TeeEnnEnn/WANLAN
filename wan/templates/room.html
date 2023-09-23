@@ -15,7 +15,7 @@
         socket.emit('join', { room: roomId, username: 'Test' });
     });
     socket.on('disconnect', function() {
-        socket.emit('leave')
+        socket.emit('leave', {room: roomId, username: "Test"})
     })
     const clickBtn = document.getElementById('btn-clickme')
     clickBtn.onclick = (() => {

@@ -69,18 +69,30 @@ def on_join(data):
         room.users.append(user)
 
     rooms.append(room)
-
-    
     join_room(room_id)
     send(username + ' has entered the room', to=room_id)
 
 
 @socketio.on('leave')
 def on_leave(data):
-    username = data['username']
+    user = None
+    current_room = None
+    user_id = request.sid
+    room_id = data["room"]
+
+    for room in rooms:
+        if room.room_id == room_id:
+            current_room = room
+            break
+
+    for user in current_room:
+        if user.sid == user_id:
+            current_room.remove(user)
+            break
+
     room = data['room']
     leave_room(room)
-    send(username + ' has left the room.', to=room)
+    send(user.name + ' has left the room.', to=room)
 
 
 @socketio.on('connect')
