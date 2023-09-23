@@ -12,14 +12,17 @@ export function UsernameForm() {
     }
 
     return (
-        <div>
-            <form onSubmit={handleSubmit}>
-                <input type="text"
-                       defaultValue={username}
-                       name={"username"}
-                       className={"bg-amber-50 text-black"}/>
-                <Button>Set Username</Button>
-            </form>
-        </div>
+        <form onSubmit={handleSubmit}
+            className="flex flex-row items-center gap-4"
+        >
+            <input
+                type="text"
+                name="username"
+                defaultValue={username}
+                placeholder={"Room Name"}
+                className="bg-gray-700 w-full rounded-md px-4 py-2.5"
+            />
+            <Button className="flex-shrink-0">Set Username</Button>
+        </form>
     )
 }

@@ -1,6 +1,7 @@
 import {useEffect, useState} from "react"
 import { socket } from "../socket"
 import {Button} from "./button.jsx";
+import { CardContent, CardFooter } from "./card";
 
 export function Chat({roomId}) {
     const [messages, setMessages] = useState([])
@@ -28,22 +29,27 @@ export function Chat({roomId}) {
         evt.target.reset()
     }
     return (
-        <div>
-            {messages.map((message, index)=>{
-                return (
-                    <div key={index}>
-                        {message}
-                    </div>
-                )
-            })}
-            <form onSubmit={handleSubmit} className={"flex flex-row gap-2 "}>
-                <input
-                    type="text"
-                    name="message"
-                    className="bg-gray-700 w-full"
-                />
-                <Button>Send</Button>
-            </form>
-        </div>
+        <>
+            <CardContent className="flex flex-col overflow-hidden h-full relative">
+                <div className="flex flex-col gap-2 h-full overflow-auto max-h-[520px]">
+                    {messages.map((message, index)=>{
+                        return (
+                            <div key={index} className="py-2">
+                                {message}
+                            </div>
+                        )
+                    })}
+                </div>
+                <form onSubmit={handleSubmit} className={"flex flex-row gap-2 sticky bottom-0"}>
+                    <input
+                        type="text"
+                        name="message"
+                        className="bg-gray-700 w-full rounded-md px-3"
+                        placeholder="Enter a message"
+                    />
+                    <Button className="flex-shrink-0">Send</Button>
+                </form>
+            </CardContent>
+        </>
     )
 }

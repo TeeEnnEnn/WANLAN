@@ -7,7 +7,7 @@ import { socket } from '../socket'
 export function VideoPlayer({ videoUrl, roomId, hasHost }) {
   const { Video, player, ready } = useVideoJS(
     { sources: [{ src: videoUrl, type: 'video/youtube' }], techOrder: ['youtube'], aspectRatio: '16:9' },
-    'aspect-video' // optional className
+    'aspect-video rounded-lg overflow-auto' // optional className
   )
 
   useEffect(() => {

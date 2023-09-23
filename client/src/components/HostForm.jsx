@@ -9,19 +9,19 @@ export function HostForm() {
         const username = window.localStorage.getItem('username') ?? 'Anonymous'
         const userId = window.localStorage.getItem('user_id')
         if (!userId) return undefined
-        socket.emit('create_room', { username, room_name: data.room_name, user_id: userId })
+        socket.emit('create_room', { username, room_name: data.room_name ?? 'New Party', user_id: userId })
         evt.target.reset()
     }
 
     return (
-        <div>
-            <form onSubmit={handleSubmit}>
-                <input type="text"
-                       name="room_name"
-                       placeholder={"Room Name"}
-                       className="bg-blue-500 "/>
-                <Button>Host A Room</Button>
-            </form>
-        </div>
+        <form onSubmit={handleSubmit}
+            className="flex flex-row items-center gap-4"
+        >
+            <input type="text"
+                    name="room_name"
+                    placeholder={"Room Name"}
+                    className="bg-gray-700 w-full rounded-md px-4 py-2.5"/>
+            <Button className="flex-shrink-0">Host A Room</Button>
+        </form>
     );
 }

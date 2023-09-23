@@ -12,13 +12,11 @@ export function VideoForm({ roomId, hasHost }) {
     }
 
     return (
-        <div className={""}>
-            <form onSubmit={handleSubmit}>
-                <input type="text"
-                       name="url"
-                       className="bg-gray-700 w-full" disabled={!hasHost} />
-                <Button>Add URL</Button>
-            </form>
-        </div>
+        <form onSubmit={handleSubmit} className="flex flex-row gap-4">
+            <input type="text"
+                    name="url"
+                    className="bg-gray-700 w-full rounded-md px-4" placeholder="Enter YouTube URL" disabled={!hasHost} />
+            <Button className="flex-shrink-0">Add URL</Button>
+        </form>
     );
 }
