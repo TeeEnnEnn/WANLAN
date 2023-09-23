@@ -18,7 +18,7 @@ class Room:
         self.users = []
 
     def __str__(self):
-        return f"Room:{self.room_id}"
+        return f"Room:{self.room_id} : {self.users}"
 
 
 class Messages:
