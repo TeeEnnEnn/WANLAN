@@ -19,3 +19,13 @@ class Room:
 
     def __str__(self):
         return f"Room:{self.room_id}"
+
+class Messages:
+    def __init__(self, messageid, roomid, userid, timestamp, message, username):
+        self.messageid:int = messageid
+        self.roomid:str = roomid
+        self.userid:str = userid
+        self.timestamp = timestamp
+        self.message:str = message
+        self.username:str = username
+
