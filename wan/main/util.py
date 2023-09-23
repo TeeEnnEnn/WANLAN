@@ -21,7 +21,7 @@ class Room:
         return f"Room:{self.room_id} : {self.users}"
 
 
-class Messages:
+class Message:
     def __init__(self, messageid, roomid, userid, timestamp, message, username):
         self.messageid:int = messageid
         self.roomid:str = roomid
