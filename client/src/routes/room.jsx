@@ -4,7 +4,8 @@ import { socket } from "../socket";
 import { Chat } from "../components/Chat";
 import { VideoForm } from "../components/VideoForm";
 import { RoomVideo } from '../components/RoomVideo'
-import { Card, CardContent, CardHeader, CardTitle } from '../components/card'
+import { Card, CardHeader, CardTitle } from '../components/card'
+import { RoomName } from '../components/RoomName'
 
 export function Room() {
     const { roomId } = useParams()
@@ -63,7 +64,7 @@ export function Room() {
     return  (
         <div className={"grid grid-cols-1 md:grid-cols-12 md:gap-4 w-full"}>
             <div className={"flex flex-col gap-3.5 md:col-span-9"}>
-                <h1 className="text-white text-4xl font-black"><marquee>Partying in: {room.name}</marquee></h1>
+                <RoomName roomName={room.name} />
                 <VideoForm roomId={roomId} hasHost={hasHost} />
                 <RoomVideo initialVideoURL={room.vid_url} roomId={roomId} hasHost={hasHost} />
             </div>

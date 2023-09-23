@@ -7,7 +7,6 @@ import uuid
 
 app, socketio = create_app()
 
-
 def gen_uuid_str():
     return str(uuid.uuid4())
 
@@ -90,7 +89,6 @@ def sync_vid(data):
 
     emit('vid_update', { 'play_state': data['play_state'], 'current_time': data['current_time'] }, to=data['room_id'], include_self=False)
 
-
 @socketio.on('create_room')
 def create(data):
     username = data['username']
@@ -127,6 +125,7 @@ def on_join(data):
 
     join_room(room_id)
     emit('new_message', {"message": f"🎉 {username} has entered the party." }, to=room_id)
+    emit('room_count', { "userCount": len(room.users) }, to=room_id)
 
 
 @socketio.on('leave')
@@ -155,6 +154,7 @@ def on_leave(data):
 
     leave_room(room_id)
     emit('new_message', {"message": f"😭 {current_user.name} has left the party." }, to=room_id)
+    emit('room_count', { "userCount": len(current_room.users) }, to=room_id)
 
 
 @socketio.on('disconnect')
