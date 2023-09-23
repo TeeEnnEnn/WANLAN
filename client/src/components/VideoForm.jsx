@@ -12,11 +12,11 @@ export function VideoForm({roomId}) {
     }
 
     return (
-        <div>
+        <div className={""}>
             <form onSubmit={handleSubmit}>
                 <input type="text"
                        name="url"
-                       className="bg-blue-500 "/>
+                       className="bg-gray-700 w-full"/>
                 <Button>Add URL</Button>
             </form>
         </div>

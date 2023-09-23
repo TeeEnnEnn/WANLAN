@@ -1,5 +1,6 @@
 import { useEffect } from "react"
 import { socket } from "../socket"
+import {Button} from "./button.jsx";
 
 export function Chat() {
     useEffect(() => {
@@ -15,12 +16,13 @@ export function Chat() {
     }
     return (
         <div>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} className={"flex flex-row gap-2 "}>
                 <input
                     type="text"
                     name="message"
-                    className="bg-red-500"
+                    className="bg-gray-700 w-full"
                 />
+                <Button>Send</Button>
             </form>
         </div>
     )
