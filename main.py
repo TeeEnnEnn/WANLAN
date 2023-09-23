@@ -131,7 +131,7 @@ def test_disconnect():
 
 @socketio.on('set-url')
 def set_url(data):
-    emit('url_update', {'url': data['url']}, to=data['room_id'])
+    emit('url_update', {'url': data['url']}, to=data['room_id'], broadcast=True)
 
 
 if __name__ == "__main__":

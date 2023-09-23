@@ -5,7 +5,8 @@ import { socket } from '../socket'
 export function RoomVideo() {
     const [videoURL, setVideoURL] = useState()
     useEffect(() => {
-        socket.on('video_change', (data) => {
+        socket.on('url_update', (data) => {
+            console.log(data);
             setVideoURL(data.url)
         })
     }, [])
