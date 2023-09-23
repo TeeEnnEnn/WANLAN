@@ -1,7 +1,7 @@
 from wan import create_app
 from flask_socketio import join_room, leave_room, send, emit
 from flask import request
-from wan.main.util import User, Room
+from wan.main.util import User, Room, Message
 
 app, socketio = create_app()
 
@@ -10,11 +10,16 @@ rooms = []
 ######## RECEIVEING MESSAGES ########
 @socketio.on('message')
 def handle_message(data):
+
     print('received message: ' + data["message"])
     emit('new_message', {"message": f"{data['username']}: {data['message']}"}, broadcast=True, to=data["room_id"])
-
-
-
+    message = Message(data['message_id'], data['room_id'], data['user_id'], data['timestamp'], data['message'], data['username'])
+    if len(rooms) != 0:
+        for room in rooms:
+            if room.room_id == message.roomid:
+                room.chat_message.append(message)
+                break
+# print(rooms)
 @socketio.on('json')
 def handle_json(json):
     print('recieved json ' + str(json))
@@ -70,6 +75,8 @@ def on_join(data):
         room.users.append(user)
 
     rooms.append(room)
+
+    print(rooms)
     join_room(room_id)
     send(username + ' has entered the room', to=room_id)
 
@@ -109,3 +116,4 @@ def test_disconnect():
 
 if __name__ == "__main__":
     socketio.run(app, debug=True, port=3001, allow_unsafe_werkzeug=True)
+
