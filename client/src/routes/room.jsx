@@ -37,12 +37,13 @@ export function Room() {
     if (!room) {
         return null
     }
+    console.log({ roomId })
     return  (
         <div className={"grid grid-cols-1 md:grid-cols-12 md:gap-4 w-full"}>
             <div className={"flex flex-col gap-2 md:col-span-9"}>
                 <h1>{room.name}</h1>
-                <VideoForm />
-                <RoomVideo />
+                <VideoForm roomId={roomId} />
+                <RoomVideo initialVideoURL={room.vid_url} />
             </div>
             <aside className="md:col-span-3">
                 <Card className='h-full'>

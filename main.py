@@ -23,9 +23,6 @@ def make_json_room(room):
         "host_id": room.host_id,
         "play_state": room.play_state,
         "vid_url": room.vid_url
-
-
-
     }
     return _room
 
@@ -131,7 +128,11 @@ def test_disconnect():
 
 @socketio.on('set-url')
 def set_url(data):
-    emit('url_update', {'url': data['url']}, to=data['room_id'], broadcast=True)
+    room = find_room_by_id(data['room_id'])
+    if room is None:
+        return
+    room.vid_url = data['url']
+    emit('url_update', { 'url': data['url'] }, to=data['room_id'], broadcast=True)
 
 
 if __name__ == "__main__":

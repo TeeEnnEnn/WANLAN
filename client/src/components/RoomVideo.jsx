@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
-import { VideoJS } from './VideoPlayer'
+import { VideoPlayer } from './VideoPlayer'
 import { socket } from '../socket'
 
-export function RoomVideo() {
-    const [videoURL, setVideoURL] = useState()
+export function RoomVideo({ initialVideoURL }) {
+    const [videoURL, setVideoURL] = useState(initialVideoURL)
     useEffect(() => {
         socket.on('url_update', (data) => {
             console.log(data);
@@ -20,13 +20,8 @@ export function RoomVideo() {
         )
     }
     return (
-        <VideoJS
-            options={{
-                techOrder: ['youtube'],
-                sources: [
-                    { "type": "video/youtube", "src": videoURL }
-                ]
-            }}
+        <VideoPlayer
+            videoUrl={videoURL}
         />
     )
 }
