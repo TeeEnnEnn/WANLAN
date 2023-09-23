@@ -5,7 +5,6 @@ from wan.main.util import User, Room
 
 app, socketio = create_app()
 
-room_users = {}
 rooms = []
 
 
@@ -66,19 +65,14 @@ def on_join(data):
     if len(room.users) == 0:
         room.host_id = user.sid
         # room is empty. The user is the host
+    else:
+        room.users.append(user)
 
-    #rooms.append(room)
+    rooms.append(room)
 
-    #room = room_users[room_id]
-
-    #if isinstance(room_users, list):
-    #    room.append(user)
-    #else:
-    #    room = list(user)
-    #rooms[room_id] = room
-    #print(rooms)
-    #join_room(roomid)
-    #send(username + ' has entered the room', to=roomid)
+    
+    join_room(room_id)
+    send(username + ' has entered the room', to=room_id)
 
 
 @socketio.on('leave')
