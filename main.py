@@ -1,8 +1,9 @@
+import socketio
+
 from wan import create_app
 from flask_socketio import join_room, leave_room, send, emit
 from flask import request
 import json
-
 
 app, socketio = create_app()
 
