@@ -103,6 +103,10 @@ def on_leave(data):
 def test_disconnect():
     print('Client disconnected')
 
+@socketio.on('set-url')
+def set_url(data):
+    emit('url_update', {'url': data['url']}, to=data['room_id'])
+
 
 if __name__ == "__main__":
     socketio.run(app, debug=True, port=3001, allow_unsafe_werkzeug=True)
