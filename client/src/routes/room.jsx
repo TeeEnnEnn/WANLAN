@@ -1,6 +1,7 @@
 import { useEffect } from "react"
-import { socket } from "../socket";
 import { useParams } from "react-router-dom";
+import { socket } from "../socket";
+import { Chat } from "../components/Chat";
 
 export function Room() {
     const { roomId } = useParams()
@@ -19,6 +20,7 @@ export function Room() {
     return  (
         <div>
             <h1>Room {roomId}</h1>
+            <Chat />
         </div>
     )
 }

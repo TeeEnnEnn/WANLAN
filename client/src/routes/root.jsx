@@ -1,7 +1,15 @@
+import { Outlet } from 'react-router-dom'
+import { Logo } from "../components/Logo";
+
 export function Root() {
     return (
-        <div>
-            <h1>Hello World</h1>
+        <div
+            className="container mx-auto"
+        >
+            <header className='py-2'>
+                <Logo />
+            </header>
+            <Outlet />
         </div>
     )
 }
