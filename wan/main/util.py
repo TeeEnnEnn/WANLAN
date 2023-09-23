@@ -23,10 +23,8 @@ class Room:
 
 
 class Message:
-    def __init__(self, messageid, roomid, userid, timestamp, message, username):
-        self.messageid: int = messageid
+    def __init__(self, roomid, userid, message, username):
         self.roomid: str = roomid
         self.userid: str = userid
-        self.timestamp = timestamp
         self.message: str = message
         self.username: str = username

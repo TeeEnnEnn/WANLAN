@@ -7,12 +7,16 @@ import uuid
 
 app, socketio = create_app()
 
+
 def gen_uuid_str():
     return str(uuid.uuid4())
+
 
 rooms = [
     Room(room_id=gen_uuid_str(), room_name="Test")
 ]
+messages = []
+
 
 def make_json_room(room):
     _room = {
@@ -26,6 +30,7 @@ def make_json_room(room):
     }
     return _room
 
+
 def make_user_json(user):
     _user = {
         "id": user.sid,
@@ -33,19 +38,23 @@ def make_user_json(user):
 
     }
     return _user
+
+
 def find_room_by_id(room_id):
     existing_room = None
     for room in rooms:
         if room.room_id == room_id:
             existing_room = room
             break
-    
+
     return existing_room
+
 
 @app.route("/api/rooms", methods=["GET"])
 def get_rooms():
     _rooms = list(map(make_json_room, rooms))
     return jsonify(_rooms)
+
 
 @app.route("/api/rooms/<roomId>", methods=["GET"])
 def get_room(roomId):
@@ -55,16 +64,22 @@ def get_room(roomId):
     return jsonify(make_json_room(_room))
 
 
+@app.route("/api/messages", methods=["GET"])
+def get_messages():
+    pass
+
+
 ######## RECEIVEING MESSAGES ########
 @socketio.on('message')
 def handle_message(data):
-    emit('new_message', {"message": f"{data['username']}: {data['message']}"}, broadcast=True, to=data["room_id"])
-    message = Message(data['message_id'], data['room_id'], data['user_id'], data['timestamp'], data['message'], data['username'])
+    emit('new_message', {"message": f"{data['username']}: {data['message']}"}, to=data["room_id"])
+    message = Message(data['room_id'], request.sid, data['message'], data['username'])
     if len(rooms) != 0:
         for room in rooms:
             if room.room_id == message.roomid:
                 room.chat_message.append(message)
                 break
+
 
 @socketio.on('create_room')
 def create(data):
@@ -84,6 +99,7 @@ def create(data):
     json_room = make_json_room(room)
     emit('room_created', json_room, broadcast=True)
 
+
 @socketio.on('join')
 def on_join(data):
     username = data['username']
@@ -99,6 +115,7 @@ def on_join(data):
 
     join_room(room_id)
     send(username + ' has entered the room', to=room_id)
+
 
 @socketio.on('leave')
 def on_leave(data):
@@ -122,9 +139,11 @@ def on_leave(data):
 
     send(user_id + ' has left the room.', to=room)
 
+
 @socketio.on('disconnect')
 def test_disconnect():
     print('Client disconnected')
+
 
 @socketio.on('set-url')
 def set_url(data):
@@ -132,9 +151,8 @@ def set_url(data):
     if room is None:
         return
     room.vid_url = data['url']
-    emit('url_update', { 'url': data['url'] }, to=data['room_id'], broadcast=True)
+    emit('url_update', {'url': data['url']}, to=data['room_id'], broadcast=True)
 
 
 if __name__ == "__main__":
     socketio.run(app, debug=True, allow_unsafe_werkzeug=True)
-

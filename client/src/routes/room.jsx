@@ -48,7 +48,7 @@ export function Room() {
             <aside className="md:col-span-3">
                 <Card className='h-full'>
                     <CardContent>
-                        <Chat />
+                        <Chat roomId={roomId} />
                     </CardContent>
                 </Card>
             </aside>
