@@ -7,7 +7,6 @@ main = Blueprint("main", __name__)
 def home():
     return render_template('index.html')
 
-@main.route("/<room_id>", methods=["GET"])
-def room():
-    room_id = 1
+@main.route("/room/<room_id>", methods=["GET"])
+def room(room_id):
     return render_template("room.html", room_id=room_id)
