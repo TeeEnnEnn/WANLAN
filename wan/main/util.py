@@ -24,10 +24,9 @@ class Room:
 
 class Message:
     def __init__(self, messageid, roomid, userid, timestamp, message, username):
-        self.messageid:int = messageid
-        self.roomid:str = roomid
-        self.userid:str = userid
+        self.messageid: int = messageid
+        self.roomid: str = roomid
+        self.userid: str = userid
         self.timestamp = timestamp
-        self.message:str = message
-        self.username:str = username
-
+        self.message: str = message
+        self.username: str = username
