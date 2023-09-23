@@ -15,6 +15,7 @@ export function VideoForm() {
                 <input type="text"
                        name="url"
                        className="bg-blue-500 "/>
+
             </form>
         </div>
     );
