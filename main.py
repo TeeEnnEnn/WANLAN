@@ -11,7 +11,9 @@ rooms = []
 ######## RECEIVEING MESSAGES ########
 @socketio.on('message')
 def handle_message(data):
-    print('received message: ' + data)
+    print('received message: ' + data["message"])
+    emit('new_message', {"message": f"{data['username']}: {data['message']}"}, broadcast=True, to=data["room_id"])
+
 
 
 @socketio.on('json')
@@ -82,17 +84,18 @@ def on_leave(data):
 
     for room in rooms:
         if room.room_id == room_id:
-            current_room = room
+            current_room: Room = room
             break
 
-    for user in current_room:
+    for user in current_room.users:
         if user.sid == user_id:
-            current_room.remove(user)
+            current_room.users.remove(user)
             break
 
     room = data['room']
     leave_room(room)
-    send(user.name + ' has left the room.', to=room)
+
+    send(user_id + ' has left the room.', to=room)
 
 
 @socketio.on('connect')
