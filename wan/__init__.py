@@ -8,12 +8,12 @@ template_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'c
 asset_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'client', 'dist', 'assets'))
 
 def create_app():
-    app: Flask = Flask(__name__, static_folder=asset_path, template_folder=template_path)
+    app: Flask = Flask(__name__, static_folder=template_path, template_folder=template_path, static_url_path='/')
     app.config["SECRET_KEY"] = "wan"
     CORS(app,resources={r"/*":{"origins":"*"}})
     socketio = SocketIO(app, cors_allowed_origins="*")
 
-    from wan.main.views import main
-    app.register_blueprint(main, url_prefix="/")
+    # from wan.main.views import main
+    # app.register_blueprint(main, url_prefix="/")
 
     return app, socketio

@@ -19,12 +19,14 @@ export function Index() {
         }
     }, [])
     useEffect(() => {
+        socket.connect()
         const handleRoomCreated = (room) => {
             setRooms(prevRooms => prevRooms.concat([room]))
         }
         socket.on('room_created', handleRoomCreated)
         return () => {
             socket.off('room_created', handleRoomCreated)
+            socket.disconnect()
         }
     }, [])
     return (

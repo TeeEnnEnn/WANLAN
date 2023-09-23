@@ -48,7 +48,6 @@ def find_room_by_id(room_id):
 
     return existing_room
 
-
 @app.route("/api/rooms", methods=["GET"])
 def get_rooms():
     _rooms = list(map(make_json_room, rooms))
@@ -62,9 +61,10 @@ def get_room(roomId):
         return jsonify(None)
     return jsonify(make_json_room(_room))
 
-
-
-
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def catch_all(path):
+    return app.send_static_file('index.html')
 
 ######## RECEIVEING MESSAGES ########
 
@@ -111,13 +111,18 @@ def create(data):
 @socketio.on('join')
 def on_join(data):
     username = data['username']
-    room_id = data['room']
+    room_id = data['room_id']
+    print(f"{room_id} room_id join")
+    print(f"{username} username join")
 
     user = User(username, request.sid)
 
     room = find_room_by_id(room_id)
+    print(f"{room} room join")
     if room is None:
         return
+
+    print(f"{user} user join")
 
     room.users.append(user)
 
@@ -131,6 +136,9 @@ def on_leave(data):
     current_room = None
     user_id = request.sid
     room_id = data["room_id"]
+
+    print(f"{user_id} user_id leave")
+    print(f"{room_id} room_id leave")
 
     for room in rooms:
         if room.room_id == room_id:
@@ -148,6 +156,9 @@ def on_leave(data):
 
     if current_room is None:
         return
+    
+    print(f"{current_user} user leave")
+    print(f"{current_room} room leave")
 
     leave_room(room_id)
     emit('new_message', {"message": f"😭 {current_user.name} has left the party." }, to=room_id)
