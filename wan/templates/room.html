@@ -35,6 +35,7 @@ src="https://www.youtube.com/embed/tgbNymZ7vqY">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
 <script type="text/javascript" charset="utf-8">
     const socket = io();
+    let messageId = 0;
     const roomId = location.pathname.split('/')?.[1]
     let username = undefined
     if (typeof roomId !== 'string') {
@@ -44,7 +45,7 @@ src="https://www.youtube.com/embed/tgbNymZ7vqY">
         socket.emit('join', { room: roomId, username: 'Test' });
     });
     socket.on('disconnect', function() {
-        socket.emit('leave')
+        socket.emit('leave', {room: roomId, username: "Test"})
     })
     const clickBtn = document.getElementById('btn-clickme')
     clickBtn.onclick = (() => {
@@ -54,5 +55,18 @@ src="https://www.youtube.com/embed/tgbNymZ7vqY">
         console.log({ data })
         alert(data.message)
     })
+    socket.emit("message", {
+        message_id:messageId,
+        room_id: roomId,
+        user_id: "username",
+        timestamp: 1,
+        message: "this is a message",
+        username: "username"
+    });
+
+    socket.on("new_message", (data)=>{
+       alert(data.message);
+    });
+
 </script>
 {% endblock content %}

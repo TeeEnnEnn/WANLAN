@@ -2,11 +2,31 @@ class User:
     def __init__(self, name, sid):
         self.name = name
         self.sid = sid
+
+    def __str__(self):
+        return f"User: {self.name}, {self.sid}"
+
+
 class Room:
-    def __init__(self, roomid, vidurl, current_time, play_state, host_id, chat_message):
-        self.roomid = roomid
-        self.vidurl = vidurl
-        self.current_time = current_time
-        self.play_state = play_state
-        self.host_id = host_id
-        self.chat_message = chat_message
+    def __init__(self, room_id):
+        self.room_id = room_id
+        self.vid_url = None
+        self.current_time = None
+        self.play_state = None
+        self.host_id = None
+        self.chat_message = []
+        self.users = []
+
+    def __str__(self):
+        return f"Room:{self.room_id}"
+
+
+class Messages:
+    def __init__(self, messageid, roomid, userid, timestamp, message, username):
+        self.messageid:int = messageid
+        self.roomid:str = roomid
+        self.userid:str = userid
+        self.timestamp = timestamp
+        self.message:str = message
+        self.username:str = username
+
