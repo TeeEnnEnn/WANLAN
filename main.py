@@ -21,10 +21,26 @@ def make_json_room(room):
     }
     return _room
 
+def find_room_by_id(room_id):
+    existing_room = None
+    for room in rooms:
+        if room.room_id == room_id:
+            existing_room = room
+            break
+    
+    return existing_room
+
 @app.route("/api/rooms", methods=["GET"])
 def get_rooms():
     _rooms = list(map(make_json_room, rooms))
     return jsonify(_rooms)
+
+@app.route("/api/rooms/<roomId>", methods=["GET"])
+def get_room(roomId):
+    _room = find_room_by_id(roomId)
+    if _room is None:
+        return jsonify(None)
+    return jsonify(make_json_room(_room))
 
 
 ######## RECEIVEING MESSAGES ########
@@ -63,16 +79,11 @@ def on_join(data):
 
     user = User(username, request.sid)
 
-    existing_room = None
-    for room in rooms:
-        if room.room_id == room_id:
-            existing_room = room
-            break
-    
-    if existing_room is None:
+    room = find_room_by_id(room_id)
+    if room is None:
         return
 
-    existing_room.users.append(user)
+    room.users.append(user)
 
     join_room(room_id)
     send(username + ' has entered the room', to=room_id)
@@ -109,5 +120,5 @@ def set_url(data):
 
 
 if __name__ == "__main__":
-    socketio.run(app, debug=True, port=3001, allow_unsafe_werkzeug=True)
+    socketio.run(app, debug=True, allow_unsafe_werkzeug=True)
 

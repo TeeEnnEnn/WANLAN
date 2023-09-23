@@ -14,6 +14,9 @@ export function Index() {
             },
             signal: abortController.signal
         }).then(response => response.json()).then(data => setRooms(data))
+        return () => {
+            abortController.abort()
+        }
     }, [])
     useEffect(() => {
         socket.on('room_created', (room) => {
