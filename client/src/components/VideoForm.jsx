@@ -1,8 +1,7 @@
-import {useEffect} from "react";
 import {socket} from "../socket.js";
 import {Button} from "./button.jsx";
 
-export function VideoForm({ roomId }) {
+export function VideoForm({ roomId, hasHost }) {
     console.log({ roomId })
     const handleSubmit = evt => {
         evt.preventDefault();
@@ -17,7 +16,7 @@ export function VideoForm({ roomId }) {
             <form onSubmit={handleSubmit}>
                 <input type="text"
                        name="url"
-                       className="bg-gray-700 w-full"/>
+                       className="bg-gray-700 w-full" disabled={!hasHost} />
                 <Button>Add URL</Button>
             </form>
         </div>

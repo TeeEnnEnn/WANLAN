@@ -7,7 +7,9 @@ export function HostForm() {
         const formData = new FormData(evt.target)
         const data = Object.fromEntries(formData);
         const username = window.localStorage.getItem('username') ?? 'Anonymous'
-        socket.emit('create_room', { username, room_name: data.room_name })
+        const userId = window.localStorage.getItem('user_id')
+        if (!userId) return undefined
+        socket.emit('create_room', { username, room_name: data.room_name, user_id: userId })
         evt.target.reset()
     }
 

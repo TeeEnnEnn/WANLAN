@@ -3,11 +3,9 @@ import { socket } from "../socket"
 import {Button} from "./button.jsx";
 
 export function Chat({roomId}) {
-
     const [messages, setMessages] = useState([])
     useEffect(() => {
         const handleNewMessage = (data) => {
-            console.log({ new_message: data })
             setMessages(prevState => [...prevState, data.message])
         }
         socket.on('new_message', handleNewMessage)
@@ -20,7 +18,11 @@ export function Chat({roomId}) {
         const formData = new FormData(evt.target)
         const data = Object.fromEntries(formData)
         const username = window.localStorage.getItem("username") ?? "Anonymous"
-        socket.emit("message", {room_id:roomId, message: data["message"], username});
+        const user_id = window.localStorage.getItem("user_id")
+        if (!user_id) {
+            return undefined
+        }
+        socket.emit("message", {room_id:roomId, user_id, message: data["message"], username});
         setMessages(prevState => [...prevState, `${username}: ${data["message"]}`])
         console.log({ data })
         evt.target.reset()

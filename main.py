@@ -11,9 +11,11 @@ app, socketio = create_app()
 def gen_uuid_str():
     return str(uuid.uuid4())
 
+default_room = Room(room_id="b19988ea-dd30-46f1-8934-12d5ef4b6b55", room_name="Co.Hack PARTY 🎉🎉🎉")
+default_room.vid_url = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ&pp=ygUkcmljayBhc3RsZXkgbmV2ZXIgZ29ubmEgZ2l2ZSB5b3UgdXAg'
 
 rooms = [
-    Room(room_id="b19988ea-dd30-46f1-8934-12d5ef4b6b55", room_name="Test")
+    default_room
 ]
 messages = []
 
@@ -35,7 +37,6 @@ def make_user_json(user):
     _user = {
         "id": user.sid,
         "name": user.name,
-
     }
     return _user
 
@@ -71,7 +72,7 @@ def catch_all(path):
 @socketio.on('message')
 def handle_message(data):
     emit('new_message', {"message": f"{data['username']}: {data['message']}" }, to=data["room_id"], include_self=False)
-    message = Message(data['room_id'], request.sid, data['message'], data['username'])
+    message = Message(data['room_id'], data['user_id'], data['message'], data['username'])
     if len(rooms) != 0:
         for room in rooms:
             if room.room_id == message.roomid:
@@ -80,7 +81,6 @@ def handle_message(data):
 
 @socketio.on('sync-vid')
 def sync_vid(data):
-
     room = find_room_by_id(data['room_id'])
     if room is None:
         return
@@ -88,17 +88,20 @@ def sync_vid(data):
     room.play_state = data['play_state']
     room.current_time = data['current_time']
 
+    emit('vid_update', { 'play_state': data['play_state'], 'current_time': data['current_time'] }, to=data['room_id'], include_self=False)
+
 
 @socketio.on('create_room')
 def create(data):
     username = data['username']
     room_name = data["room_name"]
+    user_id = data["user_id"]
 
-    user = User(username, request.sid)
+    user = User(username, user_id)
 
     room = Room(room_id=gen_uuid_str(), room_name=room_name)
 
-    room.host_id = user.sid
+    room.host_id = user_id
 
     room.users.append(user)
 
@@ -112,17 +115,13 @@ def create(data):
 def on_join(data):
     username = data['username']
     room_id = data['room_id']
-    print(f"{room_id} room_id join")
-    print(f"{username} username join")
+    user_id = data['user_id']
 
-    user = User(username, request.sid)
+    user = User(username, user_id)
 
     room = find_room_by_id(room_id)
-    print(f"{room} room join")
     if room is None:
         return
-
-    print(f"{user} user join")
 
     room.users.append(user)
 
@@ -134,11 +133,8 @@ def on_join(data):
 def on_leave(data):
     current_user = None
     current_room = None
-    user_id = request.sid
+    user_id = data["user_id"]
     room_id = data["room_id"]
-
-    print(f"{user_id} user_id leave")
-    print(f"{room_id} room_id leave")
 
     for room in rooms:
         if room.room_id == room_id:
@@ -156,9 +152,6 @@ def on_leave(data):
 
     if current_room is None:
         return
-    
-    print(f"{current_user} user leave")
-    print(f"{current_room} room leave")
 
     leave_room(room_id)
     emit('new_message', {"message": f"😭 {current_user.name} has left the party." }, to=room_id)
