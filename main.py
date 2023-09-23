@@ -39,7 +39,6 @@ def make_user_json(user):
     }
     return _user
 
-
 def find_room_by_id(room_id):
     existing_room = None
     for room in rooms:
@@ -64,12 +63,11 @@ def get_room(roomId):
     return jsonify(make_json_room(_room))
 
 
-@app.route("/api/messages", methods=["GET"])
-def get_messages():
-    pass
+
 
 
 ######## RECEIVEING MESSAGES ########
+
 @socketio.on('message')
 def handle_message(data):
     emit('new_message', {"message": f"{data['username']}: {data['message']}"}, to=data["room_id"])
@@ -79,6 +77,16 @@ def handle_message(data):
             if room.room_id == message.roomid:
                 room.chat_message.append(message)
                 break
+
+@socketio.on('sync-vid')
+def sync_vid(data):
+
+    room = find_room_by_id(data['room_id'])
+    if room is None:
+        return
+
+    room.play_state = data['play_state']
+    room.current_time = data['current_time']
 
 
 @socketio.on('create_room')
