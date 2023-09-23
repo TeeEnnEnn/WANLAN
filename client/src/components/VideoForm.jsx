@@ -5,7 +5,7 @@ export function VideoForm() {
     const handleSubmit = evt => {
         evt.preventDefault();
         const formData = new FormData(evt.target)
-        const data = Object.formEntries(formData);
+        const data = Object.fromEntries(formData);
         console.log({data})
     }
 
@@ -14,7 +14,7 @@ export function VideoForm() {
             <form onSubmit={handleSubmit}>
                 <input type="text"
                        name="url"
-                       className="bg-blue-500"/>
+                       className="bg-blue-500 "/>
             </form>
         </div>
     );

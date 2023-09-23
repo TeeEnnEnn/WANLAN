@@ -6,7 +6,7 @@ export function UsernameForm() {
     const handleSubmit = evt => {
         evt.preventDefault();
         const formData = new FormData(evt.target);
-        const data = Object.formEntries(formData);
+        const data = Object.fromEntries(formData);
         window.localStorage.setItem("username", data.username);
     }
 
@@ -16,7 +16,7 @@ export function UsernameForm() {
                 <input type="text"
                        defaultValue={username}
                        name={"username"}
-                       className={"bg-amber-50"}/>
+                       className={"bg-amber-50 text-black"}/>
             </form>
         </div>
     )
