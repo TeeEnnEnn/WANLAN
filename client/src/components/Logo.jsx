@@ -26,13 +26,15 @@ export function Logo() {
         }
     }, [])
     return (
-        <Link to='/' className="flex flex-row items-center gap-4">
-            <img src={logo} width={64} height={64} className="object-cover rounded-full" alt="Cyrill" />
-            <h1
-                className="text-6xl font-black text-transparent bg-clip-text bg-gradient-to-b from-pink-400 to-blue-400"
-            >
-                {partyVariant}.PARTY
-            </h1>
-        </Link>
+        <div className="flex flex-row items-center gap-4">
+            <img src={logo} width={64} height={64} className="object-cover rounded-full transition-all" alt="Cyrill" />
+            <Link to='/'>
+                <h1
+                    className="text-6xl font-black text-transparent bg-clip-text bg-gradient-to-b from-pink-400 to-blue-400"
+                >
+                    {partyVariant}.PARTY
+                </h1>
+            </Link>
+        </div>
     )
 }
