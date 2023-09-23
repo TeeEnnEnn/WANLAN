@@ -14,8 +14,12 @@ def handle_message(data):
     print('received message: ' + data["message"])
     emit('new_message', {"message": f"{data['username']}: {data['message']}"}, broadcast=True, to=data["room_id"])
     message = Message(data['message_id'], data['room_id'], data['user_id'], data['timestamp'], data['message'], data['username'])
-    # if len
-
+    if len(rooms) != 0:
+        for room in rooms:
+            if room.room_id == message.roomid:
+                room.chat_message.append(message)
+                break
+# print(rooms)
 @socketio.on('json')
 def handle_json(json):
     print('recieved json ' + str(json))
