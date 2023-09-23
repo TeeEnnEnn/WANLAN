@@ -5,7 +5,9 @@ from wan.main.util import User, Room, Message
 
 app, socketio = create_app()
 
+global global_roomid
 rooms = []
+
 
 ######## RECEIVEING MESSAGES ########
 @socketio.on('message')
@@ -19,7 +21,7 @@ def handle_message(data):
             if room.room_id == message.roomid:
                 room.chat_message.append(message)
                 break
-# print(rooms)
+    print(rooms)
 @socketio.on('json')
 def handle_json(json):
     print('recieved json ' + str(json))
@@ -58,15 +60,44 @@ def handle_message(data):
     print(data)
     emit('spam', {"message": 'hello from ' + request.sid}, broadcast=True)
 
+@socketio('room list')
+def room_list(data):
+    for room in rooms:
+        # room[]
+
+
+
+@socketio.on('create')
+def create(data):
+    username = data['username']
+    room_name = data["room_name"]
+
+
+    user = User(username, request.sid)
+
+    room = Room(room_id=global_roomid, room_name=room_name)
+    global_roomid += 1
+
+
+    room.host_id = user.sid
+
+    room.users.append(user)
+
+    rooms.append(room)
+    join_room(room_name)
+
+
+
 
 @socketio.on('join')
 def on_join(data):
     username = data['username']
     room_id = data['room']
+    roomName = data['room_name']
 
     user = User(username, request.sid)
 
-    room = Room(room_id=room_id)
+    room = Room(room_id=room_id, roomName=roomName)
 
     if len(room.users) == 0:
         room.host_id = user.sid
@@ -115,5 +146,6 @@ def test_disconnect():
 
 
 if __name__ == "__main__":
+    global_roomid = 0
     socketio.run(app, debug=True, port=3001, allow_unsafe_werkzeug=True)
 

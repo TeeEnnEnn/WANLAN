@@ -8,7 +8,7 @@ class User:
 
 
 class Room:
-    def __init__(self, room_id):
+    def __init__(self, room_id, room_name):
         self.room_id = room_id
         self.vid_url = None
         self.current_time = None
@@ -16,6 +16,7 @@ class Room:
         self.host_id = None
         self.chat_message = []
         self.users = []
+        self.room_name = room_name
 
     def __str__(self):
         return f"Room:{self.room_id} : {self.users}"
