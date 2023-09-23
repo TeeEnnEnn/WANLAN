@@ -42,7 +42,7 @@ export function Room() {
                 <RoomVideo />
             </div>
             <aside className="md:col-span-3">
-                <Card>
+                <Card className='h-full'>
                     <CardContent>
                         <Chat />
                     </CardContent>
