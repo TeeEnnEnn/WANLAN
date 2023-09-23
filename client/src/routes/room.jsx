@@ -10,7 +10,13 @@ export function Room() {
     const { roomId } = useParams()
     const [room, setRoom] = useState()
     useEffect(() => {
-
+        const abortController = new AbortController()
+        fetch('/api/rooms', {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            signal: abortController.signal
+        }).then(response => response.json()).then(data => setRoom(data))
     }, [])
     useEffect(() => {
         console.log({ roomId })
