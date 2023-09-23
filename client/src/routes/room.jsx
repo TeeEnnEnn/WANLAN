@@ -11,13 +11,16 @@ export function Room() {
     const [room, setRoom] = useState()
     useEffect(() => {
         const abortController = new AbortController()
-        fetch('/api/rooms', {
+        fetch(`/api/rooms/${roomId}`, {
             headers: {
                 'Content-Type': 'application/json',
             },
             signal: abortController.signal
         }).then(response => response.json()).then(data => setRoom(data))
-    }, [])
+        return () => {
+            abortController.abort()
+        }
+    }, [roomId])
     useEffect(() => {
         console.log({ roomId })
         socket.on('connect', function() {
