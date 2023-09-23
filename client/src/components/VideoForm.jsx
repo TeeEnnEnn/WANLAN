@@ -1,5 +1,6 @@
 import {useEffect} from "react";
 import {socket} from "../socket.js";
+import {Button} from "./button.jsx";
 
 export function VideoForm() {
     const handleSubmit = evt => {
@@ -15,7 +16,7 @@ export function VideoForm() {
                 <input type="text"
                        name="url"
                        className="bg-blue-500 "/>
-
+                <Button>Add URL</Button>
             </form>
         </div>
     );
