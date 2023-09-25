@@ -8,12 +8,12 @@ class User:
 
 
 class Room:
-    def __init__(self, room_id, room_name):
+    def __init__(self, room_id, room_name, host_id = None):
         self.room_id = room_id
         self.vid_url = None
         self.current_time = None
         self.play_state = None
-        self.host_id = None
+        self.host_id = host_id
         self.chat_message = []
         self.users = []
         self.room_name = room_name

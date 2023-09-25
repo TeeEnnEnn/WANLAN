@@ -11,7 +11,7 @@ export function VideoPlayer({ videoUrl, roomId, hasHost, initialTime }) {
   )
 
   useEffect(() => {
-    if (typeof initialTime !== 'undefined') {
+    if (typeof initialTime === 'number' && player) {
       player.currentTime(initialTime)
     }
   }, [player, initialTime])
@@ -20,17 +20,15 @@ export function VideoPlayer({ videoUrl, roomId, hasHost, initialTime }) {
     const handleVideoUpdate = (data) => {
       let currentTime = player.currentTime()
       if (
-        currentTime < data.currentTime - 0.5 || 
-        currentTime > currentTime + 0.5
+        currentTime < data.current_time - 0.5 || 
+        currentTime > data.current_time + 0.5
       ) {
-        player.currentTime(data.currentTime)
-        player.play()
-      }
-      player.currentTime(data.current_time)
-      if (data.play_state === 'PLAYING') {
-        player.play()
-      } else if (data.play_state === 'PAUSED') {
-        player.pause()
+        player.currentTime(data.current_time)
+        if (data.play_state === 'PLAYING') {
+          player.play()
+        } else if (data.play_state === 'PAUSED') {
+          player.pause()
+        }
       }
     }
     socket.on('vid_update', handleVideoUpdate)
@@ -41,16 +39,17 @@ export function VideoPlayer({ videoUrl, roomId, hasHost, initialTime }) {
 
   useEffect(() => {
     const handleTimeUpdate = (evt) => {
+      console.log(evt.target)
       const currentTime = evt.target.player.currentTime()
       const playState = evt.target.player.paused() ? 'PAUSED' : 'PLAYING'
       socket.emit('sync-vid', { current_time: currentTime, play_state: playState, room_id: roomId })
     }
     if (ready && hasHost) {
-      player.on('seeked', handleTimeUpdate)
+      player.on('timeupdate', handleTimeUpdate)
     }
 
     return () => {
-      player?.off('seeked', handleTimeUpdate)
+      player?.off('timeupdate', handleTimeUpdate)
     }
   }, [ready, player, roomId, hasHost])
 

@@ -66,7 +66,7 @@ export function Room() {
             <div className={"flex flex-col gap-3.5 md:col-span-9"}>
                 <RoomName roomName={room.name} />
                 <VideoForm roomId={roomId} hasHost={hasHost} />
-                <RoomVideo initialVideoURL={room.vid_url} roomId={roomId} hasHost={hasHost} />
+                <RoomVideo initialVideoURL={room.vid_url} roomId={roomId} hasHost={hasHost} initialTime={room?.current_time ?? 0} />
             </div>
             <aside className="md:col-span-3 h-full">
                 <Card className='h-full flex flex-col'>

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { VideoPlayer } from './VideoPlayer'
 import { socket } from '../socket'
 
-export function RoomVideo({ initialVideoURL, roomId, hasHost }) {
+export function RoomVideo({ initialVideoURL, roomId, hasHost, initialTime }) {
     const [videoURL, setVideoURL] = useState(initialVideoURL)
     useEffect(() => {
         const handleURLUpdate = data => {
@@ -26,6 +26,7 @@ export function RoomVideo({ initialVideoURL, roomId, hasHost }) {
         <VideoPlayer
             videoUrl={videoURL}
             roomId={roomId}
+            initialTime={initialTime}
             hasHost={hasHost}
         />
     )
